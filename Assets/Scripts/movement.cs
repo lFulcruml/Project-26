@@ -2,33 +2,35 @@ using UnityEngine;
 
 public class movement : MonoBehaviour
 {
-    public float moveSpeed = 5f;  // H�z ayar�
-    private Rigidbody2D rb;
-    private Vector2 moveInput;
-
-    private float activeMoveSpeed;
-    public float dashSpeed;
-
-    public float dashLength = 5f, dashCooldown = 1f;
+    public float moveSpeed = 5f;
+    public float dashSpeed = 10f;
+    public float dashLength = 0.3f;
+    public float dashCooldown = 1f;
 
     private float dashCounter;
     private float dashCoolCounter;
+
+    private Rigidbody2D rb;
+    private Vector2 moveInput;
+    private float activeMoveSpeed;
+
     void Start()
     {
-        activeMoveSpeed = moveSpeed;
         rb = GetComponent<Rigidbody2D>();
+        activeMoveSpeed = moveSpeed;
     }
 
     void Update()
     {
-        // Input'u al
+        // Hareket girişi al
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
-        moveInput.Normalize(); // �apraz giderken h�z sabit kals�n
+        moveInput.Normalize();
 
-        rb.linearVelocity = moveInput * activeMoveSpeed;
+        // Dash başlat
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Space tuşuna basıldı!");
             if (dashCoolCounter <= 0 && dashCounter <= 0)
             {
                 activeMoveSpeed = dashSpeed;
@@ -36,26 +38,24 @@ public class movement : MonoBehaviour
             }
         }
 
-        if(dashCounter > 0)
+        // Dash süresini azalt
+        if (dashCounter > 0)
         {
             dashCounter -= Time.deltaTime;
-
-            if(dashCounter <= 0)
+            if (dashCounter <= 0)
             {
                 activeMoveSpeed = moveSpeed;
                 dashCoolCounter = dashCooldown;
             }
         }
 
+        // Dash bekleme süresi
         if (dashCoolCounter > 0)
         {
             dashCoolCounter -= Time.deltaTime;
         }
-    }
 
-    void FixedUpdate()
-    {
         // Rigidbody'ye hareket uygula
-        rb.linearVelocity = moveInput * moveSpeed;
+        rb.linearVelocity = moveInput * activeMoveSpeed;
     }
 }
