@@ -6,8 +6,16 @@ public class movement : MonoBehaviour
     private Rigidbody2D rb;
     private Vector2 moveInput;
 
+    private float activeMoveSpeed;
+    public float dashSpeed;
+
+    public float dashLength = 5f, dashCooldown = 1f;
+
+    private float dashCounter;
+    private float dashCoolCounter;
     void Start()
     {
+        activeMoveSpeed = moveSpeed;
         rb = GetComponent<Rigidbody2D>();
     }
 
@@ -17,6 +25,32 @@ public class movement : MonoBehaviour
         moveInput.x = Input.GetAxisRaw("Horizontal");
         moveInput.y = Input.GetAxisRaw("Vertical");
         moveInput.Normalize(); // �apraz giderken h�z sabit kals�n
+
+        rb.linearVelocity = moveInput * activeMoveSpeed;
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (dashCoolCounter <= 0 && dashCounter <= 0)
+            {
+                activeMoveSpeed = dashSpeed;
+                dashCounter = dashLength;
+            }
+        }
+
+        if(dashCounter > 0)
+        {
+            dashCounter -= Time.deltaTime;
+
+            if(dashCounter <= 0)
+            {
+                activeMoveSpeed = moveSpeed;
+                dashCoolCounter = dashCooldown;
+            }
+        }
+
+        if (dashCoolCounter > 0)
+        {
+            dashCoolCounter -= Time.deltaTime;
+        }
     }
 
     void FixedUpdate()
