@@ -572,7 +572,7 @@ GameObject:
   - component: {fileID: 1145557157}
   - component: {fileID: 1145557156}
   m_Layer: 0
-  m_Name: Hasan
+  m_Name: Cinemachine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
